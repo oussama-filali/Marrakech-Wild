@@ -1,4 +1,4 @@
-const supabase = require('../supabase')
+const supabase = require('../services/supabase')
 
 exports.getAllActivities = async (req, res) => {
   const { data, error } = await supabase.from('activities').select('*')

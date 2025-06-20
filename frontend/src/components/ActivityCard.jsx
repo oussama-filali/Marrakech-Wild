@@ -1,15 +1,14 @@
 export default function ActivityCard({ activity, onBook }) {
-  const taux = 11; // 1€ ≈ 11 MAD
   return (
-    <div className="border rounded shadow p-4 flex flex-col bg-white bg-opacity-80 hover:bg-opacity-100 transition">
-      <img src={activity.image_url} alt={activity.nom} className="h-40 object-cover mb-2 rounded" />
-      <h3 className="font-bold text-lg text-blue-700">{activity.nom}</h3>
+    <div className="flex flex-col p-4 transition bg-white border rounded shadow bg-opacity-80 hover:bg-opacity-100">
+      <img src={activity.image_url} alt={activity.name} className="object-cover h-40 mb-2 rounded" />
+      <h3 className="text-lg font-bold text-blue-700">{activity.name}</h3>
       <p>{activity.description}</p>
-      <div className="flex justify-between items-center mt-2">
+      <div className="flex items-center justify-between mt-2">
         <span className="font-bold text-blue-700">
-          {activity.prix} € <span className="text-xs text-gray-500">({activity.prix * taux} MAD)</span>
+          {activity.price_eur} € <span className="text-xs text-gray-500">({activity.price_mad} MAD)</span>
         </span>
-        {onBook && <button className="bg-blue-600 text-white px-3 py-1 rounded" onClick={() => onBook(activity)}>Réserver</button>}
+        {onBook && <button className="px-3 py-1 text-white bg-blue-600 rounded" onClick={() => onBook(activity)}>Book</button>}
       </div>
     </div>
   )

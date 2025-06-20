@@ -1,12 +1,12 @@
-const supabase = require('../supabase')
+const supabase = require('../services/supabase')
 const stripeService = require('../services/stripeService')
 
 exports.createBooking = async (req, res) => {
-  const { activity_id, date, payment_method } = req.body
+  const { activity_id, date, slot, payment_method, nb_people = 1 } = req.body
   const user_id = req.user.id
 
-  if (!activity_id || !date || !payment_method) {
-    return res.status(400).json({ error: 'Champs requis manquants' })
+  if (!activity_id || !date || !slot || !payment_method) {
+    return res.status(400).json({ error: 'Missing required fields' })
   }
 
   // Paiement Stripe si demandé
@@ -24,7 +24,7 @@ exports.createBooking = async (req, res) => {
 
   const { data, error } = await supabase
     .from('bookings')
-    .insert([{ user_id, activity_id, date, payment_status }])
+    .insert([{ user_id, activity_id, date, slot, nb_people, payment_status }])
     .select()
     .single()
 

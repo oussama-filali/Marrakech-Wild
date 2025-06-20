@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const supabase = require('../services/supabase')
+const bookingController = require('../controllers/bookingController')
+const authMiddleware = require('../middleware/authMiddleware')
 
 // Récupérer toutes les réservations (admin) avec filtres
 router.get('/', async (req, res) => {
@@ -38,5 +40,11 @@ router.get('/', async (req, res) => {
 
   res.json(data)
 })
+
+// Créer une réservation (utilisateur connecté)
+router.post('/', authMiddleware, bookingController.createBooking)
+
+// Récupérer les réservations de l'utilisateur connecté
+router.get('/me', authMiddleware, bookingController.getUserBookings)
 
 module.exports = router

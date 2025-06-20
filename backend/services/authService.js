@@ -1,4 +1,4 @@
-const supabase = require('../supabase')
+const supabase = require('./supabase')
 const jwt = require('jsonwebtoken')
 
 exports.register = async (email, password, name) => {
