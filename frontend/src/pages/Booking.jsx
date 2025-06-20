@@ -5,12 +5,22 @@ import Navbar from "../components/Navbar.jsx"
 import ActivityCard from "../components/ActivityCard.jsx"
 import Footer from "../components/Footer.jsx"
 
+const creneaux = [
+  "09:00 - 10:00",
+  "10:30 - 11:30",
+  "12:00 - 13:00",
+  "14:00 - 15:00",
+  "16:00 - 17:00"
+];
+
 export default function Booking() {
   const [activities, setActivities] = useState([])
   const [activityId, setActivityId] = useState('')
   const [date, setDate] = useState('')
+  const [timeSlot, setTimeSlot] = useState('')
   const [payment, setPayment] = useState('on_site')
   const [message, setMessage] = useState('')
+  const [slot, setSlot] = useState('')
 
   useEffect(() => {
     getActivities().then(res => setActivities(res.data))
@@ -20,7 +30,7 @@ export default function Booking() {
     e.preventDefault()
     try {
       const token = getToken()
-      const res = await createBooking({ activity_id: activityId, date, payment_method: payment }, token)
+      const res = await createBooking({ activity_id: activityId, date, slot, payment_method: payment }, token)
       if (res.data.stripe_session_url) {
         window.location.href = res.data.stripe_session_url
       } else {
@@ -32,20 +42,24 @@ export default function Booking() {
   }
 
   return (
-    <form className="max-w-md mx-auto p-6" onSubmit={handleSubmit}>
-      <h2 className="text-xl font-bold mb-4">Réserver une activité</h2>
-      <select className="border p-2 mb-2 w-full" value={activityId} onChange={e => setActivityId(e.target.value)} required>
+    <form className="max-w-md p-6 mx-auto" onSubmit={handleSubmit}>
+      <h2 className="mb-4 text-xl font-bold">Réserver une activité</h2>
+      <select className="w-full p-2 mb-2 border" value={activityId} onChange={e => setActivityId(e.target.value)} required>
         <option value="">-- Choisir une activité --</option>
         {activities.map(a => (
           <option key={a.id} value={a.id}>{a.nom}</option>
         ))}
       </select>
-      <input type="date" className="border p-2 mb-2 w-full" value={date} onChange={e => setDate(e.target.value)} required />
-      <select className="border p-2 mb-2 w-full" value={payment} onChange={e => setPayment(e.target.value)}>
+      <input type="date" className="w-full p-2 mb-2 border" value={date} onChange={e => setDate(e.target.value)} required />
+      <select className="w-full p-2 mb-2 border" value={slot} onChange={e => setSlot(e.target.value)} required>
+        <option value="">-- Choisir un créneau --</option>
+        {creneaux.map(c => <option key={c} value={c}>{c}</option>)}
+      </select>
+      <select className="w-full p-2 mb-2 border" value={payment} onChange={e => setPayment(e.target.value)}>
         <option value="on_site">Payer sur place</option>
         <option value="stripe">Payer en ligne (CB)</option>
       </select>
-      <button className="bg-blue-600 text-white p-2 w-full" type="submit">Réserver</button>
+      <button className="w-full p-2 text-white bg-blue-600" type="submit">Réserver</button>
       {message && <p className="mt-4 text-sm">{message}</p>}
     </form>
   )

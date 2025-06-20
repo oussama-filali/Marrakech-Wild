@@ -1,22 +1,20 @@
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
-const activitiesRoutes = require('./routes/activities')
-const bookingsRoutes = require('./routes/bookings')
-const authRoutes = require('./routes/auth')
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.use('/activities', activitiesRoutes)
-app.use('/bookings', bookingsRoutes)
-app.use('/auth', authRoutes)
-
-app.use((err, req, res, next) => {
-  console.error(err)
-  res.status(500).json({ error: 'Erreur serveur' })
+// Routes
+const bookings = require('./routes/bookings')
+app.use('/routes/bookings', bookings)
+const activities = require('./routes/activities')
+app.use('/routes/activities', activities)
+const stripeRoutes = require('./routes/stripe')
+app.use('/services/stripe', stripeRoutes)
+// Démarrage
+const port = process.env.PORT || 3001
+app.listen(port, () => {
+  console.log(`✅ Backend running on http://localhost:${port}`)
 })
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => console.log(`Serveur lancé sur le port ${PORT}`))

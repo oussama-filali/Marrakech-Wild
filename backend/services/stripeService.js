@@ -1,5 +1,5 @@
 const Stripe = require('stripe')
-const supabase = require('../supabase')
+const supabase = require('./supabase')
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
 exports.createCheckoutSession = async (activity_id, user_id) => {
@@ -14,9 +14,9 @@ exports.createCheckoutSession = async (activity_id, user_id) => {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: activity.nom,
+            name: activity.name,
           },
-          unit_amount: activity.prix * 100,
+          unit_amount: activity.price * 100,
         },
         quantity: 1,
       }],
